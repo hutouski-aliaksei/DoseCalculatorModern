@@ -1,14 +1,11 @@
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QObject, Slot, Signal, Property, QPoint
+from PySide6.QtCore import QObject, Slot, Signal, Property
 from PySide6.QtGui import QIcon
 import sys
 import qml_rc
-import datetime
 from database import Database
 from source import Source
-from shield import Shield
-from dosetype import DoseType
 
 
 class Bridge(QObject):
@@ -17,6 +14,7 @@ class Bridge(QObject):
     catalogue_changed = Signal()
     isotope_list_changed = Signal()
     shields_list_changed = Signal()
+    dose_types_changed = Signal()
 
     def __init__(self):
         QObject.__init__(self)
@@ -28,11 +26,7 @@ class Bridge(QObject):
         self._dose_types = ["Ambient", "Personal"]
 
         self._db = Database('DoseCalculator_DB.db')
-        self._source = Source(self._db, 0, 10)
-        self._airshield = Shield('Air', self._source.distance, self._db.read('Materials', 'Air'))
-        self._shield = Shield('Air', 0, self._db.read('Materials', 'Air'))
-        self._dose_t = DoseType('Ambient', self._db.read('DoseConversionCoefficients', 'Ambient'),
-                                self._db.read('DoseConversionCoefficients', 'Kerma'))
+        self._source = Source(self._db)
 
         self._source.data_changed_changed.connect(self.source_data_changed)
 
@@ -78,11 +72,14 @@ class Bridge(QObject):
     def isotope_list(self):
         return self._isotope_list
 
+    @Property(list, notify=dose_types_changed)
+    def dose_types(self):
+        return self._dose_types
+
     def __setattr__(self, name, value):
         match name:
             case '_view_array':
                 super().__setattr__(name, value)
-                print(self._view_array)
                 self.view_array_changed.emit()
             case '_view_table':
                 super().__setattr__(name, value)
@@ -101,18 +98,44 @@ class Bridge(QObject):
 
     def source_data_changed(self):
         temp = [self._source.number, self._source.name, self._source.halflife, self._source.prod_date, self._source.original_activity,
-                self._source.cur_date, self._source.current_activity, self._shield.material, self._shield.thickness,
-                self._source.distance, self._dose_t.type]
+                self._source.cur_date, self._source.current_activity, self._source.material, self._source.thickness,
+                self._source.distance, self._source.type, self._source.sum_flux, self._source.sum_dose_rate]
         self._view_array = temp
+
+        temp = []
+        for i in range(len(self._source.lines)):
+            temp.append(f'{round(self._source.lines[i][0]*1000, 3)}\t\t{self._source.lines[i][1]}\t\t{round(self._source.kerma_rate[i], 3)}\t\t'
+                        f'{round(self._source.dose_rate[i], 3)}\t\t{round(self._source.flux[i], 3)}')
+        self._view_table = temp
 
     @Slot(int)
     def on_source_changed(self, index):
         self._source.index_changed(index)
 
+    @Slot(str)
+    def on_action(self, action):
+        match action:
+            case "source":
+                self._source.name = self._view_array[1]
+                self._source.prod_date = self._view_array[3]
+                self._source.original_activity = int(self._view_array[4])
+                self._source.cur_date = self._view_array[5]
+                self._source.current_activity = int(self._view_array[6])
+
+                self._source.parameters_changed()
+            case "activity":
+                self._source.current_activity = int(self._view_array[6])
+                self._source.material = self._view_array[7]
+                self._source.thickness = self._view_array[8]
+                self._source.distance = self._view_array[9]
+                self._source.type = self._view_array[10]
+                self._source.calculate()
+
+
 def run_app():
     app = QApplication(sys.argv)
     engine = QQmlApplicationEngine()
-#    app.setWindowIcon(QIcon('icon.ico'))
+    app.setWindowIcon(QIcon('icon.ico'))
 
     bridge = Bridge()
 

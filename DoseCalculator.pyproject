@@ -2,6 +2,7 @@
     "files": [
         "bridge.py",
         "main.py",
-        "qml.qrc"
+        "qml.qrc",
+        "source.py"
     ]
 }

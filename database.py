@@ -1,12 +1,9 @@
-from PySide6.QtCore import QObject, Signal, Property
 import sqlite3 as sq
-# import pandas as pd
 import numpy as np
 
 
-class Database(QObject):
+class Database:
     def __init__(self, name):
-        QObject.__init__(self)
         self._name = name
         con = sq.connect(self._name)
         self._cur = con.cursor()
