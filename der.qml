@@ -122,7 +122,7 @@ Page {
                     id: isotope_combobox
                     width: button_width*2
                     height: button_height
-                    anchors.top: parameters_label.bottom
+                    anchors.top: isotope_label.top
                     anchors.right: parent.right
                     anchors.rightMargin: margin
                     model: bridge.isotope_list
@@ -463,7 +463,6 @@ Page {
                     anchors.top: dose_type_label.top
                     anchors.right: parent.right
                     anchors.rightMargin: margin
-                    anchors.topMargin: margin/2
                     model: bridge.dose_types
                     currentIndex: indexOfValue(bridge.view_array[10])
                     onActivated: {

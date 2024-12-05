@@ -1,7 +1,6 @@
-from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Slot, Signal, Property
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QGuiApplication
 import sys
 import qml_rc
 from database import Database
@@ -133,9 +132,9 @@ class Bridge(QObject):
 
 
 def run_app():
-    app = QApplication(sys.argv)
+    app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
-    app.setWindowIcon(QIcon('icon-2.ico'))
+    app.setWindowIcon(QIcon('icon.ico'))
 
     bridge = Bridge()
 
