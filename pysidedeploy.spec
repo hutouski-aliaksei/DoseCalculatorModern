@@ -17,7 +17,7 @@ exec_directory = .
 project_file = DoseCalculator.pyproject
 
 # application icon
-icon = C:\Develope\DoseCalculator\icon-2.ico
+icon = C:\Develope\DoseCalculator\icon.ico
 
 [python]
 
@@ -67,7 +67,7 @@ macos.permissions =
 mode = onefile
 
 # (str) specify any extra nuitka arguments
-extra_args = --quiet --noinclude-qt-translations --nofollow-import-to=tkinter --windows-icon-from-ico=icon-2.ico --windows-console-mode=disable
+extra_args = --quiet --noinclude-qt-translations --nofollow-import-to=tkinter --windows-icon-from-ico=icon.ico --windows-console-mode=disable
 
 [buildozer]
 
