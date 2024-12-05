@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 100
     y: 100
     visible: true
-    title: "DoseCalculator 0.1.0"
+    title: "DoseCalculator 0.1.1"
 
     property int button_width: 100
     property int button_height: 30
@@ -46,9 +46,9 @@ ApplicationWindow {
             text: "DER"
         }
 
-        TabButton {
-            text: "Coefficients"
-        }
+//        TabButton {
+//            text: "Coefficients"
+//        }
 
     }
 

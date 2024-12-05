@@ -87,7 +87,7 @@ Page {
 
 
                 Label {
-                    id: parameers_label
+                    id: parameters_label
                     width: button_width
                     height: button_height
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -106,7 +106,7 @@ Page {
                     width: button_width
                     height: button_height
                     anchors.left: parent.left
-                    anchors.top: parameers_label.bottom
+                    anchors.top: parameters_label.bottom
                     anchors.leftMargin: margin
                     anchors.topMargin: margin
 
@@ -122,7 +122,7 @@ Page {
                     id: isotope_combobox
                     width: button_width*2
                     height: button_height
-                    anchors.top: isotope_label.top
+                    anchors.top: parameters_label.bottom
                     anchors.right: parent.right
                     anchors.rightMargin: margin
                     model: bridge.isotope_list
@@ -463,6 +463,7 @@ Page {
                     anchors.top: dose_type_label.top
                     anchors.right: parent.right
                     anchors.rightMargin: margin
+                    anchors.topMargin: margin/2
                     model: bridge.dose_types
                     currentIndex: indexOfValue(bridge.view_array[10])
                     onActivated: {
@@ -575,11 +576,11 @@ Page {
                         }
                         if (result_flux >= 1000) {
                             flux_label.text = (result_flux/1000).toFixed(3)
-                            flux_text_label.text = "Flux, photons/cm\u00B2s \u2218 10\u00B3"
+                            flux_text_label.text = "Flux, photons/cm\u00B2s \u00D7 10\u00B3"
                         }
                         if (result_flux >= 1000000) {
                             flux_label.text = (result_flux/1000000).toFixed(3)
-                            flux_text_label.text = "Flux, photons/cm\u00B2s \u2218 10\u2076"
+                            flux_text_label.text = "Flux, photons/cm\u00B2s \u00D7 10\u2076"
                         }
                     }
                 }

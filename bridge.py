@@ -135,7 +135,7 @@ class Bridge(QObject):
 def run_app():
     app = QApplication(sys.argv)
     engine = QQmlApplicationEngine()
-    app.setWindowIcon(QIcon('icon.ico'))
+    app.setWindowIcon(QIcon('icon-2.ico'))
 
     bridge = Bridge()
 
