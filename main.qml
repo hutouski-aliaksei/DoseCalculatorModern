@@ -10,11 +10,11 @@ ApplicationWindow {
     x: 100
     y: 100
     visible: true
-    title: "DoseCalculator 0.1.1"
+    title: "DoseCalculator 0.1.2"
 
     property int button_width: 100
     property int button_height: 30
-    property int custom_color: Material.Purple
+    property int custom_color: Material.Indigo
     property int margin: 10
 
     Material.theme: Material.Light
