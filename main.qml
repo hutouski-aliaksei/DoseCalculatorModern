@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 100
     y: 100
     visible: true
-    title: "DoseCalculator 0.1.2"
+    title: "DoseCalculator 0.1.3"
 
     property int button_width: 100
     property int button_height: 30
