@@ -2,6 +2,7 @@ from PySide6.QtCore import QObject, Signal, Property
 import numpy as np
 from scipy import interpolate
 from datetime import *
+import locale
 
 
 class Source(QObject):
@@ -22,14 +23,14 @@ class Source(QObject):
                 self._halflife = item[1]
                 break
         self._lines = self._db.read('Lines', self._name)
-        self._distance = '10.0'
+        self._distance = '10'
 
         self._material = 'Air'
-        self._thickness = '0.0'
+        self._thickness = '0'
         self._coefficients = self._db.read('Materials', 'Air')
         self._attenuation_values = []
 
-        self._air_thickness = float(self._distance) - float(self._thickness)
+        self._air_thickness = locale.atof(self._distance) - locale.atof(self._thickness)
         self._air_coefficients = self._db.read('Materials', 'Air')
         self._air_attenuation_values = []
 
@@ -44,6 +45,7 @@ class Source(QObject):
 
         self._sum_flux = 0
         self._sum_dose_rate = 0
+        locale.setlocale(locale.LC_ALL, '')
 
         self.calculate()
 
@@ -283,7 +285,7 @@ class Source(QObject):
         self._kerma_rate = kerma_rate
 
     def line_flux(self):
-        s_a = np.arcsin(np.sin(0.5 / float(self._distance)) ** 2) / np.pi
+        s_a = np.arcsin(np.sin(0.5 / locale.atof(self._distance)) ** 2) / np.pi
         flux = []
 
         for i in range(len(self._lines)):
@@ -305,7 +307,8 @@ class Source(QObject):
         self._dose_rate = d_r
 
     def calculate(self):
-        self._air_thickness = float(self._distance) - float(self._thickness)
+        # self._air_thickness = float(self._distance) - float(self._thickness)
+        self._air_thickness = locale.atof(self._distance) - locale.atof(self._thickness)
         self._coefficients = self._db.read('Materials', self._material)
         self._der_coefficients = self._db.read('DoseConversionCoefficients', self._type)
         self.attenuation()
@@ -328,7 +331,7 @@ class Source(QObject):
             temp_c.append(item[1])
         attenuation_interpolated = interpolate.interp1d(temp_en, temp_c, fill_value='extrapolate')
         for item in self._lines:
-            attenuation_values.append(np.exp(-float(self._thickness) * attenuation_interpolated(item[0])))
+            attenuation_values.append(np.exp(-locale.atof(self._thickness) * attenuation_interpolated(item[0])))
         self._attenuation_values = attenuation_values
 
         attenuation_values = []
