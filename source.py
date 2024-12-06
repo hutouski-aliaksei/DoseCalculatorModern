@@ -11,6 +11,7 @@ class Source(QObject):
     def __init__(self, db):
         QObject.__init__(self)
 
+        locale.setlocale(locale.LC_ALL, '')
         self._db = db
         self._number = 0
         self._name = self._db.sources[self._number][1]
@@ -45,7 +46,6 @@ class Source(QObject):
 
         self._sum_flux = 0
         self._sum_dose_rate = 0
-        locale.setlocale(locale.LC_ALL, '')
 
         self.calculate()
 
