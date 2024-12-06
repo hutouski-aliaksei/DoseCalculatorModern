@@ -307,7 +307,6 @@ class Source(QObject):
         self._dose_rate = d_r
 
     def calculate(self):
-        # self._air_thickness = float(self._distance) - float(self._thickness)
         self._air_thickness = locale.atof(self._distance) - locale.atof(self._thickness)
         self._coefficients = self._db.read('Materials', self._material)
         self._der_coefficients = self._db.read('DoseConversionCoefficients', self._type)
