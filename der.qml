@@ -549,8 +549,6 @@ Page {
                                     der_label.text = (result_der/1000000).toFixed(3)
                                     der_text_label.text = "Dose equivalent rate, Sv/h"
                                 }
-                                if (bridge.view_array[1] == "Cf-252" || bridge.view_array[1] == "Cm-244")
-                                    der_label.text = "Only flux data"
                             }
                         }
                     }

@@ -307,16 +307,27 @@ class Source(QObject):
         self._dose_rate = d_r
 
     def calculate(self):
-        self._air_thickness = locale.atof(self._distance) - locale.atof(self._thickness)
-        self._coefficients = self._db.read('Materials', self._material)
-        self._der_coefficients = self._db.read('DoseConversionCoefficients', self._type)
-        self.attenuation()
-        self.line_flux()
-        self.line_kerma_rate()
-        self.line_dose_rate()
+        if self._name in ["Cf-252", "Cm-244"]:
+            self._lines = [[2.13, 100]]
+            self._attenuation_values = [1]
+            self._air_attenuation_values = [1]
+            self.line_flux()
+            self._kerma_rate = [0]
+            self._dose_rate = [self._flux[0]*0.0036*385]
 
-        self._sum_flux = float(sum(self._flux))
-        self._sum_dose_rate = float(sum(self._dose_rate))
+            self._sum_flux = float(sum(self._flux))
+            self._sum_dose_rate = float(sum(self._dose_rate))
+        else:
+            self._air_thickness = locale.atof(self._distance) - locale.atof(self._thickness)
+            self._coefficients = self._db.read('Materials', self._material)
+            self._der_coefficients = self._db.read('DoseConversionCoefficients', self._type)
+            self.attenuation()
+            self.line_flux()
+            self.line_kerma_rate()
+            self.line_dose_rate()
+
+            self._sum_flux = float(sum(self._flux))
+            self._sum_dose_rate = float(sum(self._dose_rate))
 
         self._data_changed = True
         self.data_changed_changed.emit()
