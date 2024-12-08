@@ -6,6 +6,7 @@ import qml_rc
 from database import Database
 from source import Source
 import locale
+import threading
 
 
 class Bridge(QObject):
@@ -15,11 +16,13 @@ class Bridge(QObject):
     isotope_list_changed = Signal()
     shields_list_changed = Signal()
     dose_types_changed = Signal()
+    wait_changed = Signal()
 
     def __init__(self):
         QObject.__init__(self)
         locale.setlocale(locale.LC_ALL, '')
 
+        self._wait = False
         self._view_array = []
         self._view_table = []
         self._catalogue = []
@@ -31,6 +34,7 @@ class Bridge(QObject):
         self._source = Source(self._db)
 
         self._source.data_changed_changed.connect(self.source_data_changed)
+        self._source.wait_changed.connect(self.wait_value_changed)
 
         temp = []
 
@@ -78,6 +82,10 @@ class Bridge(QObject):
     def dose_types(self):
         return self._dose_types
 
+    @Property(bool, notify=wait_changed)
+    def wait(self):
+        return self._wait
+
     def __setattr__(self, name, value):
         match name:
             case '_view_array':
@@ -95,6 +103,9 @@ class Bridge(QObject):
             case '_shields_list':
                 super().__setattr__(name, value)
                 self.shields_list_changed.emit()
+            case '_wait':
+                super().__setattr__(name, value)
+                self.wait_changed.emit()
             case _:
                 super().__setattr__(name, value)
 
@@ -135,8 +146,12 @@ class Bridge(QObject):
                 self._source.calculate()
             case "der":
                 self._source.sum_dose_rate = locale.atof(self._view_array[12])
-                self._source.reverse_calculation()
+                calc_thread = threading.Thread(target=self._source.reverse_calculation)
+                calc_thread.daemon = True
+                calc_thread.start()
 
+    def wait_value_changed(self):
+        self._wait = self._source.wait
 
 
 def run_app():

@@ -5,5 +5,7 @@
         <file>main.qml</file>
         <file>dynamic.qml</file>
         <file>profile.png</file>
+        <file>user_avatar.png</file>
+        <file>WaitElement.qml</file>
     </qresource>
 </RCC>

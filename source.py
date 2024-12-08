@@ -7,6 +7,7 @@ import locale
 
 class Source(QObject):
     data_changed_changed = Signal()
+    wait_changed = Signal()
 
     def __init__(self, db):
         QObject.__init__(self)
@@ -46,6 +47,8 @@ class Source(QObject):
 
         self._sum_flux = 0
         self._sum_dose_rate = 0.0
+
+        self._wait = False
 
         self.calculate()
 
@@ -190,6 +193,10 @@ class Source(QObject):
     @Property(bool, notify=data_changed_changed)
     def data_changed(self):
         return self._data_changed
+
+    @Property(bool, notify=wait_changed)
+    def wait(self):
+        return self._wait
 
     @data_changed.setter
     def data_changed(self, value):
@@ -360,16 +367,30 @@ class Source(QObject):
         self._air_attenuation_values = attenuation_values
 
     def reverse_calculation(self):
+        max_iter = 10000
+        current_iter = 0
         temp = self._sum_dose_rate
         error = 0.01
         delta = 1
-        self.calculate()
+        self.attenuation()
+        self.line_flux()
+        self.line_kerma_rate()
+        self.line_dose_rate()
+
+        self._sum_flux = float(sum(self._flux))
+        self._sum_dose_rate = float(sum(self._dose_rate))
+
         step_err = temp - self._sum_dose_rate
         if step_err < 0:
             pr_positive = False
         else:
             pr_positive = True
+        self._wait = True
+        self.wait_changed.emit()
         while True:
+            current_iter += 1
+            if current_iter > max_iter:
+                break
             step_err = temp - self._sum_dose_rate
             if abs(step_err) < error:
                 break
@@ -397,5 +418,16 @@ class Source(QObject):
                     delta = delta / 2
                     self._distance = str(locale.atof(self._distance) + delta)
                 pr_positive = False
-            self.calculate()
+            self.attenuation()
+            self.line_flux()
+            self.line_kerma_rate()
+            self.line_dose_rate()
 
+            self._sum_flux = float(sum(self._flux))
+            self._sum_dose_rate = float(sum(self._dose_rate))
+
+        self._data_changed = True
+        self.data_changed_changed.emit()
+
+        self._wait = False
+        self.wait_changed.emit()

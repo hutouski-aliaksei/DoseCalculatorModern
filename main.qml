@@ -10,15 +10,60 @@ ApplicationWindow {
     x: 100
     y: 100
     visible: true
-    title: "DoseCalculator 0.1.4"
+    title: "DoseCalculator 0.1.5"
 
     property int button_width: 100
     property int button_height: 30
     property int custom_color: Material.Indigo
     property int margin: 10
+    property var waiting: bridge.wait
 
     Material.theme: Material.Light
     Material.accent: custom_color
+
+    Popup{
+        id: wait_popup
+        modal: false
+        width: 200
+        height: 200
+        anchors.centerIn: parent
+
+        contentItem:
+            Image {
+            id: loading
+            anchors.fill: parent
+            source: "qrc:/user_avatar.png"
+            opacity: 0.5
+            NumberAnimation on rotation {
+                from: 0
+                to: 360
+                running: loading.visible == true
+                loops: Animation.Infinite
+                duration: 2000
+            }
+        }
+        background: Rectangle{
+            color: "transparent"
+            border.color: "transparent"
+            radius: width * 0.5
+        }
+        onOpened: {
+            console.debug("popup ready");
+        }
+        onClosed: {
+            console.debug("popup hide");
+        }
+    }
+
+
+    onWaitingChanged: {
+        if (waiting) {
+           wait_popup.open()
+        }
+        else {
+            wait_popup.close()
+        }
+    }
 
     function change_view(ind) {
         switch (ind) {
