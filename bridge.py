@@ -5,6 +5,7 @@ import sys
 import qml_rc
 from database import Database
 from source import Source
+import locale
 
 
 class Bridge(QObject):
@@ -17,6 +18,8 @@ class Bridge(QObject):
 
     def __init__(self):
         QObject.__init__(self)
+        locale.setlocale(locale.LC_ALL, '')
+
         self._view_array = []
         self._view_table = []
         self._catalogue = []
@@ -96,9 +99,10 @@ class Bridge(QObject):
                 super().__setattr__(name, value)
 
     def source_data_changed(self):
-        temp = [self._source.number, self._source.name, self._source.halflife, self._source.prod_date, self._source.original_activity,
-                self._source.cur_date, self._source.current_activity, self._source.material, self._source.thickness,
-                self._source.distance, self._source.type, self._source.sum_flux, self._source.sum_dose_rate]
+        temp = [self._source.number, self._source.name, self._source.halflife, self._source.prod_date,
+                self._source.original_activity, self._source.cur_date, self._source.current_activity,
+                self._source.material, self._source.thickness, self._source.distance, self._source.type,
+                self._source.sum_flux, self._source.sum_dose_rate]
         self._view_array = temp
 
         temp = []
@@ -129,6 +133,10 @@ class Bridge(QObject):
                 self._source.distance = self._view_array[9]
                 self._source.type = self._view_array[10]
                 self._source.calculate()
+            case "der":
+                self._source.sum_dose_rate = locale.atof(self._view_array[12])
+                self._source.reverse_calculation()
+
 
 
 def run_app():

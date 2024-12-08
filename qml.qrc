@@ -3,5 +3,7 @@
         <file>coefficients.qml</file>
         <file>der.qml</file>
         <file>main.qml</file>
+        <file>dynamic.qml</file>
+        <file>profile.png</file>
     </qresource>
 </RCC>

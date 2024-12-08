@@ -40,7 +40,7 @@ Page {
                 id: catalogue_pane
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredHeight: 100
+                Layout.preferredHeight: 70
                 Material.elevation: 5
                 Material.background: Material.color(custom_color, Material.Shade50)
 
@@ -81,7 +81,7 @@ Page {
                 id: parameters_pane
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredHeight: 450
+                Layout.preferredHeight: 520
                 Material.elevation: 5
                 Material.background: Material.color(custom_color, Material.Shade50)
 
@@ -468,6 +468,71 @@ Page {
                     onActivated: {
                         bridge.view_array[10] = currentValue
                         bridge.on_action("activity")
+                    }
+                }
+            }
+
+
+            Pane {
+                id: dose_pane
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: 150
+                Material.elevation: 5
+                Material.background: Material.color(custom_color, Material.Shade50)
+
+
+                Label {
+                    id: dose_label
+                    width: button_width
+                    height: button_height
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+
+                    horizontalAlignment: Text.AlignHCenter
+                    font.bold: true
+                    font.pixelSize: 16
+                    Material.foreground: custom_color
+
+                    text: "Search DER"
+                }
+
+
+                Label {
+                    id: desired_der_label
+                    width: button_width
+                    height: button_height
+                    anchors.left: parent.left
+                    anchors.top: dose_label.bottom
+                    anchors.leftMargin: margin
+                    anchors.topMargin: margin
+
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: 14
+                    Material.foreground: custom_color
+
+                    text: "Desired DER, \u03BCSv/h"
+                }
+
+                TextField {
+                    id: desired_der_text
+                    width: button_width*2
+                    height: button_height
+                    anchors.top: desired_der_label.top
+                    anchors.right: parent.right
+                    anchors.rightMargin: margin
+                    text: "0.0"
+                    color: custom_color
+                    validator: DoubleValidator {
+                        bottom: 0.1
+                    }
+
+                    onTextEdited: {
+                        if (acceptableInput) {
+                            bridge.view_array[12] = text
+                            bridge.on_action("der")
+                        }
                     }
                 }
             }

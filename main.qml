@@ -26,6 +26,9 @@ ApplicationWindow {
              main_layout.replace("der.qml")
             break
         case 1:
+             main_layout.replace("dynamic.qml")
+            break
+        case 2:
              main_layout.replace("coefficients.qml")
             break
         default:
@@ -44,6 +47,10 @@ ApplicationWindow {
 
         TabButton {
             text: "DER"
+        }
+
+        TabButton {
+            text: "Dynamic"
         }
 
 //        TabButton {

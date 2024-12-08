@@ -45,7 +45,7 @@ class Source(QObject):
         self._dose_rate = []
 
         self._sum_flux = 0
-        self._sum_dose_rate = 0
+        self._sum_dose_rate = 0.0
 
         self.calculate()
 
@@ -235,6 +235,10 @@ class Source(QObject):
     def kerma_koeffs(self, value):
         self._kerma_coeffs = value
 
+    @sum_dose_rate.setter
+    def sum_dose_rate(self, value):
+        self._sum_dose_rate = value
+
     def index_changed(self, index):
         self._number = index
         self._name = self._db.sources[self._number][1]
@@ -354,3 +358,44 @@ class Source(QObject):
         for item in self._lines:
             attenuation_values.append(np.exp(-self._air_thickness * attenuation_interpolated(item[0])))
         self._air_attenuation_values = attenuation_values
+
+    def reverse_calculation(self):
+        temp = self._sum_dose_rate
+        error = 0.01
+        delta = 1
+        self.calculate()
+        step_err = temp - self._sum_dose_rate
+        if step_err < 0:
+            pr_positive = False
+        else:
+            pr_positive = True
+        while True:
+            step_err = temp - self._sum_dose_rate
+            if abs(step_err) < error:
+                break
+            elif step_err > 0:
+                if not pr_positive:
+                    delta = delta / 2
+                    while True:
+                        if locale.atof(self._distance) - delta <= 0:
+                            delta = delta / 2
+                        else:
+                            break
+                    self._distance = str(locale.atof(self._distance) - delta)
+                else:
+                    while True:
+                        if locale.atof(self._distance) - delta <= 0:
+                            delta = delta / 2
+                        else:
+                            break
+                    self._distance = str(locale.atof(self._distance) - delta)
+                pr_positive = True
+            elif step_err < 0:
+                if not pr_positive:
+                    self._distance = str(locale.atof(self._distance) + delta)
+                else:
+                    delta = delta / 2
+                    self._distance = str(locale.atof(self._distance) + delta)
+                pr_positive = False
+            self.calculate()
+
