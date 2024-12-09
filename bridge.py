@@ -7,6 +7,7 @@ from database import Database
 from source import Source
 import locale
 import threading
+from dynamic import Dynamic
 
 
 class Bridge(QObject):
@@ -17,6 +18,7 @@ class Bridge(QObject):
     shields_list_changed = Signal()
     dose_types_changed = Signal()
     wait_changed = Signal()
+    view_dynamic_changed = Signal()
 
     def __init__(self):
         QObject.__init__(self)
@@ -30,11 +32,16 @@ class Bridge(QObject):
         self._shields_list = []
         self._dose_types = ["Ambient", "Personal"]
 
+        self._view_dynamic = []
+
         self._db = Database('DoseCalculator_DB.db')
         self._source = Source(self._db)
 
+        self._dynamic = Dynamic()
+
         self._source.data_changed_changed.connect(self.source_data_changed)
         self._source.wait_changed.connect(self.wait_value_changed)
+        self._dynamic.data_changed_changed.connect(self.dynamic_data_changed)
 
         temp = []
 
@@ -53,6 +60,7 @@ class Bridge(QObject):
         self._shields_list = self._db.materials
 
         self.source_data_changed()
+        self.dynamic_data_changed()
 
     @Property(list, notify=view_array_changed)
     def view_array(self):
@@ -86,6 +94,14 @@ class Bridge(QObject):
     def wait(self):
         return self._wait
 
+    @Property(list, notify=view_dynamic_changed)
+    def view_dynamic(self):
+        return self._view_dynamic
+
+    @view_dynamic.setter
+    def view_dynamic(self, value):
+        self._view_dynamic = value
+
     def __setattr__(self, name, value):
         match name:
             case '_view_array':
@@ -106,6 +122,9 @@ class Bridge(QObject):
             case '_wait':
                 super().__setattr__(name, value)
                 self.wait_changed.emit()
+            case '_view_dynamic':
+                super().__setattr__(name, value)
+                self.view_dynamic_changed.emit()
             case _:
                 super().__setattr__(name, value)
 
@@ -121,6 +140,12 @@ class Bridge(QObject):
             temp.append(f'{round(self._source.lines[i][0]*1000, 3)}\t\t{self._source.lines[i][1]}\t\t{round(self._source.kerma_rate[i], 3)}\t\t'
                         f'{round(self._source.dose_rate[i], 3)}\t\t{round(self._source.flux[i], 3)}')
         self._view_table = temp
+
+    def dynamic_data_changed(self):
+        temp = [self._dynamic.distance_1, self._dynamic.distance_2, self._dynamic.velocity_1, self._dynamic.velocity_2,
+                self._dynamic.time_1, self._dynamic.time_2, self._dynamic.coefficient_1, self._dynamic.coefficient_2,
+                self._dynamic.ratio]
+        self._view_dynamic = temp
 
     @Slot(int)
     def on_source_changed(self, index):
@@ -149,6 +174,14 @@ class Bridge(QObject):
                 calc_thread = threading.Thread(target=self._source.reverse_calculation)
                 calc_thread.daemon = True
                 calc_thread.start()
+            case "dynamic":
+                self._dynamic.distance_1 = self._view_dynamic[0]
+                self._dynamic.distance_2 = self._view_dynamic[1]
+                self._dynamic.velocity_1 = self._view_dynamic[2]
+                self._dynamic.velocity_2 = self._view_dynamic[3]
+                self._dynamic.time_1 = self._view_dynamic[4]
+                self._dynamic.time_2 = self._view_dynamic[5]
+                self._dynamic.calculate()
 
     def wait_value_changed(self):
         self._wait = self._source.wait
