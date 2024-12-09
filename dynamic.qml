@@ -44,12 +44,26 @@ Page {
                 Material.elevation: 5
                 Material.background: Material.color(custom_color, Material.Shade50)
 
+                Label {
+                    id: dynamic_label
+                    width: button_width
+                    height: button_height
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    font.bold: true
+                    font.pixelSize: 16
+                    Material.foreground: custom_color
+
+                    text: "Dynamic to Static"
+                }
+
                 RowLayout {
                     id: dynamic_row_layout
                     anchors.fill: parent
                     anchors.leftMargin: margin
                     anchors.rightMargin: margin
-                    anchors.bottomMargin: button_height
+                    anchors.topMargin: button_height
                     spacing: margin
 
                     Item {
@@ -59,11 +73,28 @@ Page {
                         Layout.preferredWidth: 100
 
                         Label {
-                            id: distance_label
+                            id: configuration_label
                             width: button_width
                             height: button_height
                             anchors.left: parent.left
                             anchors.top: parent.top
+                            anchors.leftMargin: margin
+                            anchors.topMargin: margin
+
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "Configuration"
+                        }
+
+                        Label {
+                            id: distance_label
+                            width: button_width
+                            height: button_height
+                            anchors.left: parent.left
+                            anchors.top: configuration_label.bottom
                             anchors.leftMargin: margin
                             anchors.topMargin: margin
 
@@ -151,11 +182,28 @@ Page {
                         Layout.fillHeight: true
                         Layout.preferredWidth: 100
 
+                        Label {
+                            id: first_label
+                            width: button_width
+                            height: button_height
+                            anchors.horizontalCenter: distance_1_text.horizontalCenter
+                            anchors.top: parent.top
+                            anchors.topMargin: margin
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "First"
+                        }
+
                         TextField {
                             id: distance_1_text
                             width: button_width*2
                             height: button_height
-                            anchors.top: parent.top
+                            anchors.top: first_label.bottom
                             anchors.right: parent.right
                             anchors.topMargin: margin
                             anchors.rightMargin: margin
@@ -221,12 +269,11 @@ Page {
                             id: coefficient_1_label
                             width: button_width
                             height: button_height
-                            anchors.left: time_1_text.left
+                            anchors.horizontalCenter: time_1_text.horizontalCenter
                             anchors.top: time_1_text.bottom
-                            anchors.leftMargin: margin*1.5
                             anchors.topMargin: margin
 
-                            horizontalAlignment: Text.AlignLeft
+                            horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             font.bold: true
                             font.pixelSize: 14
@@ -239,12 +286,11 @@ Page {
                             id: ratio_value_label
                             width: button_width
                             height: button_height
-                            anchors.left: time_1_text.left
+                            anchors.horizontalCenter: time_1_text.horizontalCenter
                             anchors.top: coefficient_1_label.bottom
-                            anchors.leftMargin: margin*1.5
                             anchors.topMargin: margin
 
-                            horizontalAlignment: Text.AlignLeft
+                            horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             font.bold: true
                             font.pixelSize: 14
@@ -261,11 +307,28 @@ Page {
                         Layout.fillHeight: true
                         Layout.preferredWidth: 100
 
+                        Label {
+                            id: second_label
+                            width: button_width
+                            height: button_height
+                            anchors.horizontalCenter: distance_2_text.horizontalCenter
+                            anchors.top: parent.top
+                            anchors.topMargin: margin
+
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "Second"
+                        }
+
                         TextField {
                             id: distance_2_text
                             width: button_width*2
                             height: button_height
-                            anchors.top: parent.top
+                            anchors.top: second_label.bottom
                             anchors.right: parent.right
                             anchors.topMargin: margin
                             anchors.rightMargin: margin
@@ -331,13 +394,12 @@ Page {
                             id: coefficient_2_label
                             width: button_width
                             height: button_height
-                            anchors.left: time_2_text.left
+                            anchors.horizontalCenter: time_2_text.horizontalCenter
                             anchors.top: time_2_text.bottom
-                            anchors.leftMargin: margin*1.5
                             anchors.topMargin: margin
 
                             verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignLeft
+                            horizontalAlignment: Text.AlignHCenter
                             font.bold: true
                             font.pixelSize: 14
                             Material.foreground: custom_color
@@ -382,12 +444,26 @@ Page {
                 Material.elevation: 5
                 Material.background: Material.color(custom_color, Material.Shade50)
 
+                Label {
+                    id: limits_label
+                    width: button_width
+                    height: button_height
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    font.bold: true
+                    font.pixelSize: 16
+                    Material.foreground: custom_color
+
+                    text: "Alarm limit"
+                }
+
                 RowLayout {
                     id: limits_row_layout
                     anchors.fill: parent
                     anchors.leftMargin: margin
                     anchors.rightMargin: margin
-                    anchors.bottomMargin: button_height
+                    anchors.topMargin: button_height
                     spacing: margin
 
                     Item {
@@ -558,12 +634,11 @@ Page {
                             id: limit_value_label
                             width: button_width
                             height: button_height
-                            anchors.left: limit_time_text.left
+                            anchors.horizontalCenter: limit_time_text.horizontalCenter
                             anchors.top: limit_time_text.bottom
-                            anchors.leftMargin: margin*1.5
                             anchors.topMargin: margin
 
-                            horizontalAlignment: Text.AlignLeft
+                            horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                             font.bold: true
                             font.pixelSize: 14

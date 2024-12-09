@@ -40,7 +40,7 @@ Page {
                 id: catalogue_pane
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredHeight: 70
+                Layout.preferredHeight: 75
                 Material.elevation: 5
                 Material.background: Material.color(custom_color, Material.Shade50)
 
@@ -395,6 +395,9 @@ Page {
 
                     onTextEdited: {
                         if (acceptableInput) {
+                            if (text * 1 > bridge.view_array[9] * 1) {
+                                text = bridge.view_array[9]
+                            }
                             bridge.view_array[8] = text
                             bridge.on_action("activity")
                         }
@@ -434,6 +437,10 @@ Page {
                     onTextEdited: {
                         if (acceptableInput) {
                             bridge.view_array[9] = text
+                            if (text * 1 < bridge.view_array[8] * 1) {
+                                bridge.view_array[8] = text
+                                thickness_text.text = bridge.view_array[8]
+                            }
                             bridge.on_action("activity")
                         }
                     }
