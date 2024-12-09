@@ -8,6 +8,7 @@ from source import Source
 import locale
 import threading
 from dynamic import Dynamic
+from limits import Limit
 
 
 class Bridge(QObject):
@@ -38,10 +39,13 @@ class Bridge(QObject):
         self._source = Source(self._db)
 
         self._dynamic = Dynamic()
+        self._limit = Limit()
 
         self._source.data_changed_changed.connect(self.source_data_changed)
         self._source.wait_changed.connect(self.wait_value_changed)
         self._dynamic.data_changed_changed.connect(self.dynamic_data_changed)
+        self._limit.wait_changed.connect(self.wait_value_changed)
+        self._limit.data_changed_changed.connect(self.dynamic_data_changed)
 
         temp = []
 
@@ -144,7 +148,7 @@ class Bridge(QObject):
     def dynamic_data_changed(self):
         temp = [self._dynamic.distance_1, self._dynamic.distance_2, self._dynamic.velocity_1, self._dynamic.velocity_2,
                 self._dynamic.time_1, self._dynamic.time_2, self._dynamic.coefficient_1, self._dynamic.coefficient_2,
-                self._dynamic.ratio]
+                self._dynamic.ratio, self._limit.background, self._limit.far, self._limit.time, self._limit.limit]
         self._view_dynamic = temp
 
     @Slot(int)
@@ -160,7 +164,6 @@ class Bridge(QObject):
                 self._source.original_activity = int(self._view_array[4])
                 self._source.cur_date = self._view_array[5]
                 self._source.current_activity = int(self._view_array[6])
-
                 self._source.parameters_changed()
             case "activity":
                 self._source.current_activity = int(self._view_array[6])
@@ -182,9 +185,16 @@ class Bridge(QObject):
                 self._dynamic.time_1 = self._view_dynamic[4]
                 self._dynamic.time_2 = self._view_dynamic[5]
                 self._dynamic.calculate()
+            case "limit":
+                self._limit.background = self._view_dynamic[9]
+                self._limit.far = self._view_dynamic[10]
+                self._limit.time = self._view_dynamic[11]
+                limit_thread = threading.Thread(target=self._limit.calculate)
+                limit_thread.daemon = True
+                limit_thread.start()
 
     def wait_value_changed(self):
-        self._wait = self._source.wait
+        self._wait = self._source.wait or self._limit.wait
 
 
 def run_app():

@@ -221,12 +221,12 @@ Page {
                             id: coefficient_1_label
                             width: button_width
                             height: button_height
-                            anchors.left: parent.left
+                            anchors.left: time_1_text.left
                             anchors.top: time_1_text.bottom
-                            anchors.leftMargin: margin
+                            anchors.leftMargin: margin*1.5
                             anchors.topMargin: margin
 
-                            horizontalAlignment: Text.AlignHCenter
+                            horizontalAlignment: Text.AlignLeft
                             verticalAlignment: Text.AlignVCenter
                             font.bold: true
                             font.pixelSize: 14
@@ -239,12 +239,12 @@ Page {
                             id: ratio_value_label
                             width: button_width
                             height: button_height
-                            anchors.left: parent.left
+                            anchors.left: time_1_text.left
                             anchors.top: coefficient_1_label.bottom
-                            anchors.leftMargin: margin
+                            anchors.leftMargin: margin*1.5
                             anchors.topMargin: margin
 
-                            horizontalAlignment: Text.AlignHCenter
+                            horizontalAlignment: Text.AlignLeft
                             verticalAlignment: Text.AlignVCenter
                             font.bold: true
                             font.pixelSize: 14
@@ -331,13 +331,13 @@ Page {
                             id: coefficient_2_label
                             width: button_width
                             height: button_height
-                            anchors.left: parent.left
+                            anchors.left: time_2_text.left
                             anchors.top: time_2_text.bottom
-                            anchors.leftMargin: margin
+                            anchors.leftMargin: margin*1.5
                             anchors.topMargin: margin
 
                             verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
+                            horizontalAlignment: Text.AlignLeft
                             font.bold: true
                             font.pixelSize: 14
                             Material.foreground: custom_color
@@ -360,7 +360,7 @@ Page {
                 Image {
                     id: profile_image
                     anchors.fill: parent
-
+                    fillMode: Image.PreserveAspectFit
                     source: "profile.png"
                 }
 
@@ -373,6 +373,207 @@ Page {
             Layout.fillHeight: true
             Layout.preferredWidth: 100
             spacing: margin
+
+            Pane {
+                id: limits_pane
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: 100
+                Material.elevation: 5
+                Material.background: Material.color(custom_color, Material.Shade50)
+
+                RowLayout {
+                    id: limits_row_layout
+                    anchors.fill: parent
+                    anchors.leftMargin: margin
+                    anchors.rightMargin: margin
+                    anchors.bottomMargin: button_height
+                    spacing: margin
+
+                    Item {
+                        id: limits_lable_item
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 100
+
+                        Label {
+                            id: background_label
+                            width: button_width
+                            height: button_height
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: margin
+                            anchors.topMargin: margin
+
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "Background, cps"
+                        }
+
+                        Label {
+                            id: far_label
+                            width: button_width
+                            height: button_height
+                            anchors.left: parent.left
+                            anchors.top: background_label.bottom
+                            anchors.leftMargin: margin
+                            anchors.topMargin: margin
+
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "FAR per s"
+                        }
+
+                        Label {
+                            id: limit_time_label
+                            width: button_width
+                            height: button_height
+                            anchors.left: parent.left
+                            anchors.top: far_label.bottom
+                            anchors.leftMargin: margin
+                            anchors.topMargin: margin
+
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "Experiment time, s"
+                        }
+
+                        Label {
+                            id: limit_label
+                            width: button_width
+                            height: button_height
+                            anchors.left: parent.left
+                            anchors.top: limit_time_label.bottom
+                            anchors.leftMargin: margin
+                            anchors.topMargin: margin
+
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "Limit, counts"
+                        }
+
+                        Button {
+                            id: limit_button
+                            width: button_width
+                            height: button_height
+                            anchors.left: parent.left
+                            anchors.top: limit_label.bottom
+                            anchors.leftMargin: margin
+                            anchors.topMargin: margin
+                            leftPadding: 5
+                            rightPadding: 5
+
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "Calculate"
+
+                            onClicked: bridge.on_action("limit")
+                        }
+                    }
+
+                    Item {
+                        id: limits_first_item
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 100
+
+                        TextField {
+                            id: background_text
+                            width: button_width*2
+                            height: button_height
+                            anchors.top: parent.top
+                            anchors.right: parent.right
+                            anchors.topMargin: margin
+                            anchors.rightMargin: margin
+                            text: bridge.view_dynamic[9]
+                            color: custom_color
+                            validator: DoubleValidator {
+                                bottom: 0.001
+                            }
+
+                            onTextEdited: {
+                                if (acceptableInput) {
+                                    bridge.view_dynamic[9] = text
+                                }
+                            }
+                        }
+
+                        TextField {
+                            id: far_text
+                            width: button_width*2
+                            height: button_height
+                            anchors.top: background_text.bottom
+                            anchors.right: parent.right
+                            anchors.topMargin: margin
+                            anchors.rightMargin: margin
+                            text: bridge.view_dynamic[10]
+                            color: custom_color
+                            validator: DoubleValidator {
+                                bottom: 0.000001
+                            }
+
+                            onTextEdited: {
+                                if (acceptableInput) {
+                                    bridge.view_dynamic[10] = text
+                                }
+                            }
+                        }
+
+                        TextField {
+                            id: limit_time_text
+                            width: button_width*2
+                            height: button_height
+                            anchors.top: far_text.bottom
+                            anchors.right: parent.right
+                            anchors.topMargin: margin
+                            anchors.rightMargin: margin
+                            text: bridge.view_dynamic[11]
+                            color: custom_color
+                            validator: DoubleValidator {
+                                bottom: 0.1
+                            }
+
+                            onTextEdited: {
+                                if (acceptableInput) {
+                                    bridge.view_dynamic[11] = text
+                                }
+                            }
+                        }
+
+                        Label {
+                            id: limit_value_label
+                            width: button_width
+                            height: button_height
+                            anchors.left: limit_time_text.left
+                            anchors.top: limit_time_text.bottom
+                            anchors.leftMargin: margin*1.5
+                            anchors.topMargin: margin
+
+                            horizontalAlignment: Text.AlignLeft
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: bridge.view_dynamic[12]
+                        }
+                    }
+                }
+            }
 
         }
 

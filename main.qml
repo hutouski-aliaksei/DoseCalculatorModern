@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 100
     y: 100
     visible: true
-    title: "DoseCalculator 0.2.0"
+    title: "DoseCalculator 0.2.1"
 
     maximumHeight: height
     maximumWidth: width
@@ -100,7 +100,7 @@ ApplicationWindow {
         }
 
         TabButton {
-            text: "Dynamic"
+            text: "Dynamic and Limits"
         }
 
 //        TabButton {
