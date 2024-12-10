@@ -148,7 +148,8 @@ class Bridge(QObject):
     def dynamic_data_changed(self):
         temp = [self._dynamic.distance_1, self._dynamic.distance_2, self._dynamic.velocity_1, self._dynamic.velocity_2,
                 self._dynamic.time_1, self._dynamic.time_2, self._dynamic.coefficient_1, self._dynamic.coefficient_2,
-                self._dynamic.ratio, self._limit.background, self._limit.far, self._limit.time, self._limit.limit]
+                self._dynamic.ratio, self._limit.background, self._limit.far, self._limit.time, self._limit.limit,
+                self._limit.max_limit, ', '.join(['{:.2f}'.format(x) for x in self._limit.bckgr_cps])]
         self._view_dynamic = temp
 
     @Slot(int)
@@ -190,6 +191,13 @@ class Bridge(QObject):
                 self._limit.far = self._view_dynamic[10]
                 self._limit.time = self._view_dynamic[11]
                 limit_thread = threading.Thread(target=self._limit.calculate)
+                limit_thread.daemon = True
+                limit_thread.start()
+            case "reverse_limit":
+                self._limit.far = self._view_dynamic[10]
+                self._limit.time = self._view_dynamic[11]
+                self._limit.max_limit = self._view_dynamic[13]
+                limit_thread = threading.Thread(target=self._limit.calculate_reverse)
                 limit_thread.daemon = True
                 limit_thread.start()
 

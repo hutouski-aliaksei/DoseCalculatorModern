@@ -20,6 +20,10 @@ class Limit(QObject):
 
         self._limit = 0
 
+        self._bckgr_cps = []
+
+        self._max_limit = 10
+
         self._wait = False
 
         self._data_changed = True
@@ -40,6 +44,14 @@ class Limit(QObject):
     def limit(self):
         return self._limit
 
+    @property
+    def bckgr_cps(self):
+        return self._bckgr_cps
+
+    @property
+    def max_limit(self):
+        return self._max_limit
+
     @background.setter
     def background(self, value):
         self._background = value
@@ -55,6 +67,10 @@ class Limit(QObject):
     @limit.setter
     def limit(self, value):
         self._limit = value
+
+    @max_limit.setter
+    def max_limit(self, value):
+        self._max_limit = value
 
     @Property(bool, notify=data_changed_changed)
     def data_changed(self):
@@ -82,6 +98,31 @@ class Limit(QObject):
             for j in range(k, 5000):
                 prob_temp = prob_temp + poisson.pmf(j, mean)
         self._limit = k
+
+        self._data_changed = True
+        self.data_changed_changed.emit()
+
+        self._wait = False
+        self.wait_changed.emit()
+
+    def calculate_reverse(self):
+        self._wait = True
+        self.wait_changed.emit()
+
+        temp = []
+        back = 0
+        prob = locale.atof(self._far) * locale.atof(self._time)
+        for i in range(int(self._max_limit)):
+            prob_temp = 0
+            while prob_temp < prob:
+                back += 0.01
+                mean = back * locale.atof(self._time)
+                prob_temp = 0
+                for j in range(i, 1000, 1):
+                    prob_temp = prob_temp + poisson.pmf(j, mean)
+            temp.append(round(back, 2))
+
+        self._bckgr_cps = temp
 
         self._data_changed = True
         self.data_changed_changed.emit()

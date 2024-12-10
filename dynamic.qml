@@ -11,7 +11,6 @@ Page {
     property int button_width: 100
     property int button_height: 30
     property int margin: 10
-    //    property int custom_color: Material.DeepOrange
 
     Material.theme: Material.Light
     Material.accent: custom_color
@@ -451,6 +450,7 @@ Page {
                     anchors.top: parent.top
                     anchors.horizontalCenter: parent.horizontalCenter
 
+                    horizontalAlignment: Text.AlignHCenter
                     font.bold: true
                     font.pixelSize: 16
                     Material.foreground: custom_color
@@ -540,25 +540,6 @@ Page {
                             text: "Limit, counts"
                         }
 
-                        Button {
-                            id: limit_button
-                            width: button_width
-                            height: button_height
-                            anchors.left: parent.left
-                            anchors.top: limit_label.bottom
-                            anchors.leftMargin: margin
-                            anchors.topMargin: margin
-                            leftPadding: 5
-                            rightPadding: 5
-
-                            font.bold: true
-                            font.pixelSize: 14
-                            Material.foreground: custom_color
-
-                            text: "Calculate"
-
-                            onClicked: bridge.on_action("limit")
-                        }
                     }
 
                     Item {
@@ -648,6 +629,202 @@ Page {
                         }
                     }
                 }
+
+                Button {
+                    id: limit_button
+                    width: button_width*1.5
+                    height: button_height*2
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.leftMargin: margin
+                    anchors.bottomMargin: margin
+                    leftPadding: 5
+                    rightPadding: 5
+
+                    font.bold: true
+                    font.pixelSize: 14
+                    Material.background: custom_color
+                    highlighted: true
+
+                    text: "Calculate"
+
+                    onClicked: bridge.on_action("limit")
+                }
+
+            }
+
+            Pane {
+                id: reverse_limits_pane
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: 100
+                Material.elevation: 5
+                Material.background: Material.color(custom_color, Material.Shade50)
+
+                Label {
+                    id: reverse_limits_label
+                    width: button_width
+                    height: button_height
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    horizontalAlignment: Text.AlignHCenter
+                    font.bold: true
+                    font.pixelSize: 16
+                    Material.foreground: custom_color
+
+                    text: "Reverse limits calculation"
+                }
+
+                RowLayout {
+                    id: reverse_limits_row_layout
+                    anchors.fill: parent
+                    anchors.leftMargin: margin
+                    anchors.rightMargin: margin
+                    anchors.topMargin: button_height
+                    spacing: margin
+
+                    Item {
+                        id: reverse_limits_lable_item
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 100
+
+                        Label {
+                            id: max_limit_label
+                            width: button_width
+                            height: button_height
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            anchors.leftMargin: margin
+                            anchors.topMargin: margin
+
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "Max limit"
+                        }
+
+                        Label {
+                            id: bckgr_label
+                            width: button_width
+                            height: button_height
+                            anchors.left: parent.left
+                            anchors.top: max_limit_label.bottom
+                            anchors.leftMargin: margin
+                            anchors.topMargin: margin
+
+                            verticalAlignment: Text.AlignVCenter
+                            font.bold: true
+                            font.pixelSize: 14
+                            Material.foreground: custom_color
+
+                            text: "Background, cps"
+                        }
+
+                    }
+
+                    Item {
+                        id: reverse_limits_first_item
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 100
+
+                        TextField {
+                            id: max_limit_text
+                            width: button_width*2
+                            height: button_height
+                            anchors.top: parent.top
+                            anchors.right: parent.right
+                            anchors.topMargin: margin
+                            anchors.rightMargin: margin
+                            text: bridge.view_dynamic[13]
+                            Material.background: custom_color
+                            validator: IntValidator {
+                                bottom: 1
+                            }
+
+                            onTextEdited: {
+                                if (acceptableInput) {
+                                    bridge.view_dynamic[13] = text
+                                }
+                            }
+                        }
+
+                        TextArea {
+                            id: bckgr_value_text
+                            width: button_width*2.1
+                            height: button_height*5
+                            anchors.top: max_limit_text.bottom
+                            anchors.left: max_limit_text.left
+                            anchors.topMargin: margin
+                            topPadding: 5
+                            wrapMode: TextEdit.WordWrap
+                            readOnly: true
+                            font.bold: true
+                            font.pixelSize: 14
+                            color: Material.color(custom_color)
+                            horizontalAlignment: TextEdit.AlignJustify
+                            background: Rectangle {
+                                implicitWidth: parent.width
+                                implicitHeight: parent.height
+                                color: Material.color(custom_color, Material.Shade50)
+                                border.color: "transparent"
+                            }
+                            text: bridge.view_dynamic[14]
+
+                            MouseArea {
+                                id: bckgr_mouse_area
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    bckgr_value_text.color = Material.color(Material.Orange)
+                                    cursorShape = Qt.BusyCursor
+                                    timer.start()
+                                    parent.selectAll()
+                                    parent.copy()
+                                    parent.deselect()
+                                }
+                            }
+                        }
+
+                        Timer {
+                            id: timer
+                            interval: 200
+                            running: false
+                            repeat: false
+                            onTriggered: {
+                                bckgr_value_text.color = color = Material.color(custom_color)
+                                bckgr_mouse_area.cursorShape = Qt.PointingHandCursor
+                            }
+                        }
+                    }
+
+                }
+
+                Button {
+                    id: reverse_limit_button
+                    width: button_width*1.5
+                    height: button_height*2
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.bottom: parent.bottom
+                    anchors.leftMargin: margin
+                    anchors.bottomMargin: margin
+                    leftPadding: 5
+                    rightPadding: 5
+
+                    font.bold: true
+                    font.pixelSize: 14
+                    Material.background: custom_color
+                    highlighted: true
+
+                    text: "Calculate"
+
+                    onClicked: bridge.on_action("reverse_limit")
+                }
+
             }
 
         }

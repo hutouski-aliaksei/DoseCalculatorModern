@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 100
     y: 100
     visible: true
-    title: "DoseCalculator 0.2.2"
+    title: "DoseCalculator 0.2.3"
 
     maximumHeight: height
     maximumWidth: width
