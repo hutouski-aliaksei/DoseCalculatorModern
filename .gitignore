@@ -76,5 +76,4 @@ CMakeLists.txt.user*
 venv/
 *.zip
 *.user
-*.png
 
