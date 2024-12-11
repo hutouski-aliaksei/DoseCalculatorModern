@@ -1,0 +1,1 @@
+Gamma dose-rate and flux calculator with ISO and NIST coefficients. Profiles and alarm limits calculation.
