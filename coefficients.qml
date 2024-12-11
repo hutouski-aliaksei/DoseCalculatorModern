@@ -11,7 +11,6 @@ Page {
     property int button_width: 100
     property int button_height: 30
     property int margin: 10
-//    property int custom_color: Material.DeepOrange
 
     Material.theme: Material.Light
     Material.accent: custom_color
