@@ -68,8 +68,9 @@ Page {
                     anchors.rightMargin: margin
                     model: bridge.catalogue
                     currentIndex: bridge.view_array[0]
+                    enabled: bridge.db_exists
                     onActivated: {
-                        bridge.on_source_changed(currentIndex)
+                        bridge.on_action(currentIndex)
                     }
                 }
 
@@ -125,12 +126,15 @@ Page {
                     anchors.rightMargin: margin
                     model: bridge.isotope_list
                     currentIndex: indexOfValue(bridge.view_array[1])
+                    enabled: bridge.db_exists
                     onActivated: {
                         bridge.view_array[1] = currentValue
                         bridge.on_action("source")
                     }
                     Component.onCompleted: {
-                        bridge.on_action("source")
+                        if (bridge.db_exists) {
+                            bridge.on_action("source")
+                        }
                     }
                 }
 
@@ -190,6 +194,7 @@ Page {
                     text: bridge.view_array[3]
                     color: custom_color
                     validator: RegularExpressionValidator { regularExpression: /(\d{1,2})([\/]\d{1,2})([\/]\d{4,4})$/ }
+                    enabled: bridge.db_exists
                     onTextEdited: {
                         if (acceptableInput) {
                             bridge.view_array[3] = text
@@ -225,6 +230,7 @@ Page {
                     text: bridge.view_array[5]
                     color: custom_color
                     validator: RegularExpressionValidator { regularExpression: /(\d{1,2})([\/]\d{1,2})([\/]\d{4,4})$/ }
+                    enabled: bridge.db_exists
                     onTextEdited: {
                         if (acceptableInput) {
                             bridge.view_array[5] = text
@@ -260,6 +266,7 @@ Page {
                     text: bridge.view_array[4]
                     color: custom_color
                     validator: RegularExpressionValidator { regularExpression: /\d{1,15}/ }
+                    enabled: bridge.db_exists
                     onTextEdited: {
                         if (acceptableInput) {
                             bridge.view_array[4] = text
@@ -295,6 +302,7 @@ Page {
                     text: bridge.view_array[6]
                     color: custom_color
                     validator: RegularExpressionValidator { regularExpression: /\d{1,15}/ }
+                    enabled: bridge.db_exists
                     onTextEdited: {
                         if (acceptableInput) {
                             bridge.view_array[6] = text
@@ -355,6 +363,7 @@ Page {
                     anchors.rightMargin: margin
                     model: bridge.shields_list
                     currentIndex: indexOfValue(bridge.view_array[7])
+                    enabled: bridge.db_exists
                     onActivated: {
                         bridge.view_array[7] = currentValue
                         bridge.on_action("activity")
@@ -390,7 +399,7 @@ Page {
                     validator: DoubleValidator {
                         bottom: 0
                     }
-
+                    enabled: bridge.db_exists
                     onTextEdited: {
                         if (acceptableInput) {
                             if (text * 1 > bridge.view_array[9] * 1) {
@@ -431,7 +440,7 @@ Page {
                     validator: DoubleValidator {
                         bottom: 0.1
                     }
-
+                    enabled: bridge.db_exists
                     onTextEdited: {
                         if (acceptableInput) {
                             bridge.view_array[9] = text
@@ -470,6 +479,7 @@ Page {
                     anchors.rightMargin: margin
                     model: bridge.dose_types
                     currentIndex: indexOfValue(bridge.view_array[10])
+                    enabled: bridge.db_exists
                     onActivated: {
                         bridge.view_array[10] = currentValue
                         bridge.on_action("activity")
@@ -532,7 +542,7 @@ Page {
                     validator: DoubleValidator {
                         bottom: 0.1
                     }
-
+                    enabled: bridge.db_exists
                     onTextEdited: {
                         if (acceptableInput) {
                             bridge.view_array[12] = text

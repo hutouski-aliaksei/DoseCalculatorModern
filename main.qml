@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 100
     y: 100
     visible: true
-    title: "DoseCalculator 0.2.3"
+    title: "DoseCalculator 0.2.4"
 
     maximumHeight: height
     maximumWidth: width
@@ -42,7 +42,14 @@ ApplicationWindow {
             modal: true
             focus: true
             closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-            Material.background: Material.color(custom_color, Material.Shade50)
+            // Material.background: Material.color(custom_color, Material.Shade50)
+
+            background: Rectangle {
+                width: button_width*4
+                height: button_height*7
+                color: Material.color(custom_color, Material.Shade50)
+                radius: 5
+            }
 
             Label {
                 id: popup_text

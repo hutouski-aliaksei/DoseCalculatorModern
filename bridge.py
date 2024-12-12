@@ -167,10 +167,6 @@ class Bridge(QObject):
                 self._limit.max_limit, ', '.join(['{:.2f}'.format(x) for x in self._limit.bckgr_cps])]
         self._view_dynamic = temp
 
-    @Slot(int)
-    def on_source_changed(self, index):
-        self._source.index_changed(index)
-
     @Slot(str)
     def on_action(self, action):
         match action:
@@ -215,6 +211,8 @@ class Bridge(QObject):
                 limit_thread = threading.Thread(target=self._limit.calculate_reverse)
                 limit_thread.daemon = True
                 limit_thread.start()
+            case _:
+                self._source.index_changed(int(action))
 
     def wait_value_changed(self):
         if self._db_exists:
