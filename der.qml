@@ -50,7 +50,6 @@ Page {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: margin
-//                    anchors.topMargin: margin
 
                     verticalAlignment: Text.AlignVCenter
                     font.bold: true

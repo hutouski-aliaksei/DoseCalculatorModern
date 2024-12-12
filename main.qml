@@ -26,6 +26,60 @@ ApplicationWindow {
     Material.theme: Material.Light
     Material.accent: custom_color
 
+    property var database: bridge.db_exists
+
+    onDatabaseChanged:  {
+        if (!database) {
+        db_popup.open()
+        }
+    }
+
+    Popup {
+            id: db_popup
+            width: button_width*4
+            height: button_height*7
+            anchors.centerIn: parent
+            modal: true
+            focus: true
+            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+            Material.background: Material.color(custom_color, Material.Shade50)
+
+            Label {
+                id: popup_text
+                width: button_width*3
+                height: button_height
+                Material.foreground: custom_color
+                anchors.top: parent.top
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: margin*5
+                text: "No Database found"
+                wrapMode: "Wrap"
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: 20
+            }
+
+            Button {
+                id: close_popup_button
+                width: button_width*1.5
+                height: button_height*2
+                text: "Close"
+                font.bold: true
+                font.pixelSize: 14
+                Material.background: custom_color
+                highlighted: true
+                leftPadding: 5
+                rightPadding: 5
+                anchors.bottom: parent.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: db_popup.close()
+            }
+
+            onClosed: {
+
+            }
+
+        }
+
     Popup{
         id: wait_popup
         modal: false

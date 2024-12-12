@@ -2,6 +2,7 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtCore import QObject, Slot, Signal, Property
 from PySide6.QtGui import QIcon, QGuiApplication
 import sys
+import sqlite3
 import qml_rc
 from database import Database
 from source import Source
@@ -20,6 +21,7 @@ class Bridge(QObject):
     dose_types_changed = Signal()
     wait_changed = Signal()
     view_dynamic_changed = Signal()
+    db_exists_changed = Signal()
 
     def __init__(self):
         QObject.__init__(self)
@@ -34,37 +36,43 @@ class Bridge(QObject):
         self._dose_types = ["Ambient", "Personal"]
 
         self._view_dynamic = []
-
-        self._db = Database('DoseCalculator_DB.db')
-        self._source = Source(self._db)
+        self._db_exists = True
 
         self._dynamic = Dynamic()
         self._limit = Limit()
 
-        self._source.data_changed_changed.connect(self.source_data_changed)
-        self._source.wait_changed.connect(self.wait_value_changed)
         self._dynamic.data_changed_changed.connect(self.dynamic_data_changed)
         self._limit.wait_changed.connect(self.wait_value_changed)
         self._limit.data_changed_changed.connect(self.dynamic_data_changed)
 
-        temp = []
-
-        for item in self._db.halflife:
-            temp.append(item[0])
-
-        self._isotope_list = temp
-
-        temp = []
-
-        for item in self._db.sources:
-            temp.append(f'{item[1]}\t{item[2]}')
-
-        self._catalogue = temp
-
-        self._shields_list = self._db.materials
-
-        self.source_data_changed()
         self.dynamic_data_changed()
+
+        try:
+            self._db = Database('DoseCalculator_DB.db')
+            self._source = Source(self._db)
+
+            self._source.data_changed_changed.connect(self.source_data_changed)
+            self._source.wait_changed.connect(self.wait_value_changed)
+
+            temp = []
+
+            for item in self._db.halflife:
+                temp.append(item[0])
+
+            self._isotope_list = temp
+
+            temp = []
+
+            for item in self._db.sources:
+                temp.append(f'{item[1]}\t{item[2]}')
+
+            self._catalogue = temp
+
+            self._shields_list = self._db.materials
+
+            self.source_data_changed()
+        except sqlite3.OperationalError:
+            self._db_exists = False
 
     @Property(list, notify=view_array_changed)
     def view_array(self):
@@ -106,6 +114,10 @@ class Bridge(QObject):
     def view_dynamic(self, value):
         self._view_dynamic = value
 
+    @Property(bool, notify=db_exists_changed)
+    def db_exists(self):
+        return self._db_exists
+
     def __setattr__(self, name, value):
         match name:
             case '_view_array':
@@ -129,6 +141,9 @@ class Bridge(QObject):
             case '_view_dynamic':
                 super().__setattr__(name, value)
                 self.view_dynamic_changed.emit()
+            case '_db_exists':
+                super().__setattr__(name, value)
+                self.db_exists_changed.emit()
             case _:
                 super().__setattr__(name, value)
 
@@ -202,7 +217,10 @@ class Bridge(QObject):
                 limit_thread.start()
 
     def wait_value_changed(self):
-        self._wait = self._source.wait or self._limit.wait
+        if self._db_exists:
+            self._wait = self._source.wait or self._limit.wait
+        else:
+            self._wait = self._limit.wait
 
 
 def run_app():
