@@ -422,7 +422,7 @@ Page {
                     id: profile_image
                     anchors.fill: parent
                     fillMode: Image.PreserveAspectFit
-                    source: "profile.png"
+                    source: "qrc:/img/profile.png"
                 }
 
             }

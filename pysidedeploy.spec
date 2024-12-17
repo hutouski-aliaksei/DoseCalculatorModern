@@ -17,7 +17,7 @@ exec_directory = .
 project_file = DoseCalculator.pyproject
 
 # application icon
-icon = C:\Develope\DoseCalculator\icon.ico
+icon = C:\Develope\DoseCalculator\img\icon.ico
 
 [python]
 
@@ -34,13 +34,13 @@ android_packages = buildozer==1.5.0,cython==0.29.33
 
 # comma separated path to qml files required
 # normally all the qml files required by the project are added automatically
-qml_files = main.qml,der.qml,coefficients.qml
+qml_files = qml\main.qml,qml\der.qml,qml\coefficients.qml,qml\dynamic.qml
 
 # excluded qml plugin binaries
 excluded_qml_plugins = QtQuick3D,QtSensors,QtTest,QtWebEngine
 
 # qt modules used. comma separated
-modules = Quick,QuickControls2,Qml,Core,Gui
+modules = Gui,Core,Qml,QuickControls2,Quick
 
 # qt plugins used by the application
 plugins = accessiblebridge,platformthemes,imageformats,platforms,iconengines,xcbglintegrations,styles,generic,platforms/darwin,platforminputcontexts,egldeviceintegrations,scenegraph,qmltooling
@@ -67,7 +67,7 @@ macos.permissions =
 mode = onefile
 
 # (str) specify any extra nuitka arguments
-extra_args = --quiet --noinclude-qt-translations --nofollow-import-to=tkinter --windows-icon-from-ico=icon.ico --windows-console-mode=disable
+extra_args = --quiet --noinclude-qt-translations --nofollow-import-to=tkinter --windows-icon-from-ico=img/icon.ico --windows-console-mode=disable
 
 [buildozer]
 

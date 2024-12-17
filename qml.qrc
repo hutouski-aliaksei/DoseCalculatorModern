@@ -1,11 +1,12 @@
 <RCC>
     <qresource prefix="/">
-        <file>coefficients.qml</file>
-        <file>der.qml</file>
-        <file>main.qml</file>
-        <file>dynamic.qml</file>
-        <file>profile.png</file>
-        <file>user_avatar.png</file>
-        <file>WaitElement.qml</file>
+        <file>img/icon.ico</file>
+        <file>img/profile.png</file>
+        <file>img/user_avatar.png</file>
+        <file>qml/coefficients.qml</file>
+        <file>qml/der.qml</file>
+        <file>qml/dynamic.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/WaitElement.qml</file>
     </qresource>
 </RCC>

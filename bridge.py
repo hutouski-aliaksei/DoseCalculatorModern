@@ -224,13 +224,13 @@ class Bridge(QObject):
 def run_app():
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
-    app.setWindowIcon(QIcon('icon.ico'))
+    app.setWindowIcon(QIcon('img/icon.ico'))
 
     bridge = Bridge()
 
     engine.rootContext().setContextProperty('bridge', bridge)
 
-    engine.load("qrc:/main.qml")
+    engine.load("qrc:/qml/main.qml")
 
     if not engine.rootObjects():
         return -1

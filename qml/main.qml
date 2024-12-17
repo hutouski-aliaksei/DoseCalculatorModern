@@ -98,7 +98,7 @@ ApplicationWindow {
             Image {
             id: loading
             anchors.fill: parent
-            source: "qrc:/user_avatar.png"
+            source: "qrc:/img/user_avatar.png"
             opacity: 0.5
             NumberAnimation on rotation {
                 from: 0
