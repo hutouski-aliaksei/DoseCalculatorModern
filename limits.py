@@ -97,6 +97,11 @@ class Limit(QObject):
             prob_temp = 0
             for j in range(k, 5000):
                 prob_temp = prob_temp + poisson.pmf(j, mean)
+            # for j in range(k, 100, 1):
+            #     fact = 1
+            #     for m in range(j):
+            #         fact *= (m + 1)
+            #     prob_temp = prob_temp + ((mean ** j) / fact) * (2.718281828 ** (-mean))
         self._limit = k
 
         self._data_changed = True
@@ -120,6 +125,11 @@ class Limit(QObject):
                 prob_temp = 0
                 for j in range(i, 1000, 1):
                     prob_temp = prob_temp + poisson.pmf(j, mean)
+                # for j in range(i, 100, 1):
+                #     fact = 1
+                #     for m in range(j):
+                #         fact *= (m + 1)
+                #     prob_temp = prob_temp + ((mean**j) / fact) * (2.718281828**(-mean))
             temp.append(round(back, 2))
 
         self._bckgr_cps = temp

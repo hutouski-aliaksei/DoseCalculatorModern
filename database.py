@@ -1,5 +1,4 @@
 import sqlite3 as sq
-import numpy as np
 
 
 class Database:
@@ -24,7 +23,7 @@ class Database:
         return self._materials
 
     def read(self, table, name):
-        data = np.zeros(5)
+        data = []
         if table in ['DoseConversionCoefficients', 'Materials']:
             res = self._cur.execute(f"select energy, {name} from {table} where {name} is not null order by energy asc")
             data = res.fetchall()
