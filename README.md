@@ -1,6 +1,6 @@
 # Dose Calculator
 
-The Dose Calculator is a software for calculation of different values used in the everyday work of R&D and QC departments. This software is developed using Python 3.10.4, QML 6.5.0 and SQLite3.
+The Dose Calculator is a software for calculation of different values used in the everyday work of R&D and QC departments. This software is developed using Python 3.10.4, QML 6.8.1 and SQLite3.
 
 Git hub: https://github.com/hutouski-aliaksei/DoseCalculatorModern
 
