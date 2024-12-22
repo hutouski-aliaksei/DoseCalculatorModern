@@ -4,6 +4,9 @@ The Dose Calculator is a software for calculation of different values used in th
 
 Git hub: https://github.com/hutouski-aliaksei/DoseCalculatorModern
 
+**Also Android version is available:**
+https://github.com/hutouski-aliaksei/DoseCalculatorAndroid
+
 The Dose Calculator has five different modes, there are:
 1.	DER calculation with known source, distance and shielding.
 2.	Distance calculation with known DER, source and shielding.
