@@ -77,4 +77,5 @@ venv/
 dist/
 *.zip
 *.user
+android_build_manual/
 
