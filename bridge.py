@@ -6,6 +6,7 @@ import sqlite3
 import qml_rc
 from database import Database
 from source import Source
+from source9000 import Source9000
 import locale
 import threading
 from dynamic import Dynamic
@@ -22,6 +23,9 @@ class Bridge(QObject):
     wait_changed = Signal()
     view_dynamic_changed = Signal()
     db_exists_changed = Signal()
+    view_array9000_changed = Signal()
+    view_table9000_changed = Signal()
+    catalogue9000_changed = Signal()
 
     def __init__(self):
         QObject.__init__(self)
@@ -34,6 +38,10 @@ class Bridge(QObject):
         self._isotope_list = []
         self._shields_list = []
         self._dose_types = ["Ambient", "Personal"]
+
+        self._catalogue9000 = []
+        self._view_array9000 = []
+        self._view_table9000 = []
 
         self._view_dynamic = []
         self._db_exists = True
@@ -50,9 +58,11 @@ class Bridge(QObject):
         try:
             self._db = Database('DoseCalculator_DB.db')
             self._source = Source(self._db)
+            self._source9000 = Source9000(self._db)
 
             self._source.data_changed_changed.connect(self.source_data_changed)
             self._source.wait_changed.connect(self.wait_value_changed)
+            self._source9000.data_changed_changed.connect(self.source9000_data_changed)
 
             temp = []
 
@@ -68,9 +78,17 @@ class Bridge(QObject):
 
             self._catalogue = temp
 
+            temp = []
+
+            for item in self._db.sources9000:
+                temp.append(f'{item[2]}')
+
+            self._catalogue9000 = temp
+
             self._shields_list = self._db.materials
 
             self.source_data_changed()
+            self.source9000_data_changed()
         except sqlite3.OperationalError:
             self._db_exists = False
 
@@ -118,6 +136,22 @@ class Bridge(QObject):
     def db_exists(self):
         return self._db_exists
 
+    @Property(list, notify=view_array9000_changed)
+    def view_array9000(self):
+        return self._view_array9000
+
+    @view_array9000.setter
+    def view_array9000(self, value):
+        self._view_array9000 = value
+
+    @Property(list, notify=view_table9000_changed)
+    def view_table9000(self):
+        return self._view_table9000
+
+    @Property(list, notify=catalogue9000_changed)
+    def catalogue9000(self):
+        return self._catalogue9000
+
     def __setattr__(self, name, value):
         match name:
             case '_view_array':
@@ -144,6 +178,15 @@ class Bridge(QObject):
             case '_db_exists':
                 super().__setattr__(name, value)
                 self.db_exists_changed.emit()
+            case '_view_array9000':
+                super().__setattr__(name, value)
+                self.view_array9000_changed.emit()
+            case '_view_table9000':
+                super().__setattr__(name, value)
+                self.view_table9000_changed.emit()
+            case '_catalogue9000':
+                super().__setattr__(name, value)
+                self.catalogue9000_changed.emit()
             case _:
                 super().__setattr__(name, value)
 
@@ -166,6 +209,19 @@ class Bridge(QObject):
                 self._dynamic.ratio, self._limit.background, self._limit.far, self._limit.time, self._limit.limit,
                 self._limit.max_limit, ', '.join(['{:.2f}'.format(x) for x in self._limit.bckgr_cps])]
         self._view_dynamic = temp
+
+    def source9000_data_changed(self):
+        temp = [self._source9000.number, self._source9000.name, self._source9000.halflife, self._source9000.prod_date,
+                self._source9000.cur_date, self._source9000.material, self._source9000.thickness,
+                self._source9000.distance, self._source9000.type, self._source9000.dose_rate]
+        self._view_array9000 = temp
+
+        temp = []
+        for i in range(len(self._source9000.points)):
+            temp.append(
+                f'{self._source9000.points[i][0]}\t\t{self._source9000.points[i][1]}\t\t'
+                f'{round(self._source9000.current_points[i][1], 3)}\t\t')
+        self._view_table9000 = temp
 
     @Slot(str)
     def on_action(self, action):
@@ -211,8 +267,21 @@ class Bridge(QObject):
                 limit_thread = threading.Thread(target=self._limit.calculate_reverse)
                 limit_thread.daemon = True
                 limit_thread.start()
+            case "parameters9000":
+                self._source9000.cur_date = self._view_array[4]
+                self._source9000.material = self._view_array[5]
+                self._source9000.thickness = self._view_array[6]
+                self._source9000.distance = self._view_array[7]
+                self._source9000.type = self._view_array[8]
+                self._source9000.calculate()
+            case "der9000":
+                self._source9000.dose_rate = locale.atof(self._view_array9000[9])
+                self._source9000.distance_search()
             case _:
-                self._source.index_changed(int(action))
+                if int(action < 10000):
+                    self._source.index_changed(int(action))
+                else:
+                    self._source9000.index_changed(int(action)-10000)
 
     def wait_value_changed(self):
         if self._db_exists:

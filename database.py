@@ -9,10 +9,15 @@ class Database:
         self._sources = self.read('Sources', '')
         self._halflife = self.read('Halflife', '')
         self._materials = self.read('Columns', '')
+        self._sources9000 = self.read('Sources9000', '')
 
     @property
     def sources(self):
         return self._sources
+
+    @property
+    def sources9000(self):
+        return self._sources9000
 
     @property
     def halflife(self):
@@ -28,7 +33,7 @@ class Database:
             res = self._cur.execute(f"select energy, {name} from {table} where {name} is not null order by energy asc")
             data = res.fetchall()
             # data = np.array(data)
-        elif table == 'Sources':
+        elif table == 'Sources' or table == 'Sources9000':
             res = self._cur.execute(f"select * from {table} order by id asc")
             data = res.fetchall()
             # data = pd.DataFrame(data)
@@ -50,4 +55,7 @@ class Database:
             for item in data:
                 temp.append(item[0])
             data = temp
+        else:
+            res = self._cur.execute(f"select distance, kerma from {table} order by distance asc")
+            data = res.fetchall()
         return data
