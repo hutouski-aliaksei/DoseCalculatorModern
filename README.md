@@ -24,7 +24,8 @@ For attenuation calculations used data from NIST (https://www.nist.gov/pml/x-ray
 ## 1.	DER calculation
 
 
- <img width="962" alt="sceen 1" src="https://github.com/user-attachments/assets/100fbf1a-d4fd-4f9f-b286-56af16125cad" />
+<img width="962" alt="sceen 1" src="https://github.com/user-attachments/assets/3b9c035f-2c3e-449b-b9ea-431f381b9068" />
+
 
 ***
 
@@ -48,7 +49,8 @@ For attenuation calculations used data from NIST (https://www.nist.gov/pml/x-ray
 ## 3.	Dynamic to static total counts conversion
 
 
- <img width="962" alt="screen 2" src="https://github.com/user-attachments/assets/fdde820e-cdb2-473b-82be-501bb3470515" />
+<img width="962" alt="screen 2" src="https://github.com/user-attachments/assets/0e9a3d14-7e2a-491f-ae56-e3a5ba2af3ff" />
+
 
 ***
 
@@ -71,4 +73,15 @@ For attenuation calculations used data from NIST (https://www.nist.gov/pml/x-ray
   2.	In Max limit field you need to set the maximum limit for which it is necessary to calculate corresponding background CPS.
   3.	Press Calculate to perform calculation. Calculation process is accompanied by animation.
   4.	The result will be shown in the field Background. Index of the CPS value corresponds to the value of the limit. That is, first value for limit equal to 1, second for the limit equal to 2 and so on. The values could be copied to the clipboard by clicking on them.
+
+## 6. PM9000 dosimetric facility DER and distance calculation
+
+
+<img width="962" alt="screen 3" src="https://github.com/user-attachments/assets/2a8b8163-22f7-423a-bba3-0d612f3a7998" />
+
+
+***
+
+ 1. Here you can calculate DER and distance for dosimetric facility PM9000 using data from Calibration certificate MN/200/23 by STUK from 22.10.2024.
+ 2. The main mode is calculation of distance using known DER.
 
