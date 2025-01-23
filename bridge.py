@@ -81,7 +81,7 @@ class Bridge(QObject):
             temp = []
 
             for item in self._db.sources9000:
-                temp.append(f'{item[2]}')
+                temp.append(f'{item[1]}')
 
             self._catalogue9000 = temp
 
@@ -219,8 +219,8 @@ class Bridge(QObject):
         temp = []
         for i in range(len(self._source9000.points)):
             temp.append(
-                f'{self._source9000.points[i][0]}\t\t{self._source9000.points[i][1]}\t\t'
-                f'{round(self._source9000.current_points[i][1], 3)}\t\t')
+                f'{self._source9000.points[i][0]}\t\t\t{self._source9000.points[i][1]}\t\t\t' +
+                '{:e}'.format(self._source9000.current_points[i][1]))
         self._view_table9000 = temp
 
     @Slot(str)
@@ -268,17 +268,17 @@ class Bridge(QObject):
                 limit_thread.daemon = True
                 limit_thread.start()
             case "parameters9000":
-                self._source9000.cur_date = self._view_array[4]
-                self._source9000.material = self._view_array[5]
-                self._source9000.thickness = self._view_array[6]
-                self._source9000.distance = self._view_array[7]
-                self._source9000.type = self._view_array[8]
+                self._source9000.cur_date = self._view_array9000[4]
+                self._source9000.material = self._view_array9000[5]
+                self._source9000.thickness = self._view_array9000[6]
+                self._source9000.type = self._view_array9000[8]
+                self._source9000.dose_rate = self._view_array9000[9]
                 self._source9000.calculate()
             case "der9000":
-                self._source9000.dose_rate = locale.atof(self._view_array9000[9])
-                self._source9000.distance_search()
+                self._source9000.distance = self._view_array9000[7]
+                self._source9000.der_search()
             case _:
-                if int(action < 10000):
+                if int(action) < 10000:
                     self._source.index_changed(int(action))
                 else:
                     self._source9000.index_changed(int(action)-10000)

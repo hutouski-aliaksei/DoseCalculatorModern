@@ -10,7 +10,7 @@ ApplicationWindow {
     x: 100
     y: 100
     visible: true
-    title: "DoseCalculator 0.2.5"
+    title: "DoseCalculator 0.3.0"
 
     maximumHeight: height
     maximumWidth: width
@@ -140,6 +140,9 @@ ApplicationWindow {
              main_layout.replace("dynamic.qml")
             break
         case 2:
+             main_layout.replace("der9000.qml")
+            break
+        case 3:
              main_layout.replace("coefficients.qml")
             break
         default:
@@ -162,6 +165,10 @@ ApplicationWindow {
 
         TabButton {
             text: "Dynamic and Limits"
+        }
+
+        TabButton {
+            text: "PM9000"
         }
 
 //        TabButton {

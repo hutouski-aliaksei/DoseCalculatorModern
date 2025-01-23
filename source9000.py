@@ -51,7 +51,7 @@ class Source9000(QObject):
         self._line = float(self._db.sources9000[self._number][4])
         self._points = self._db.read(self._serial, '')
         self._current_points = []
-        self._distance = '58.5'
+        self._distance = '100'
 
         self._material = 'Air'
         self._thickness = '0'
@@ -61,7 +61,7 @@ class Source9000(QObject):
         self._type = 'Ambient'
         self._der_coefficients = self._db.read('DoseConversionCoefficients', 'Ambient')
 
-        self._dose_rate = 0.0
+        self._dose_rate = '100'
 
         self._wait = False
 
@@ -239,7 +239,10 @@ class Source9000(QObject):
                 temp = abs(locale.atof(self._distance) - item[0])
                 point = item
 
-        self._dose_rate = point[1] / (((locale.atof(self._distance))**2) / (point[0]**2))
+        self._dose_rate = str(round((point[1] / (((locale.atof(self._distance))**2) / (point[0]**2))) * 1000, 3))
+
+        self._data_changed = True
+        self.data_changed_changed.emit()
 
     def line_dose_rate(self):
         temp_en = []
@@ -260,7 +263,7 @@ class Source9000(QObject):
         self.attenuation()
         self.decay()
         self.line_dose_rate()
-        self.der_search()
+        self.distance_search()
 
         self._data_changed = True
         self.data_changed_changed.emit()
@@ -278,11 +281,17 @@ class Source9000(QObject):
         temp = 10000
         point = []
         for item in self._current_points:
-            if abs(self._dose_rate - item[1]) < temp:
-                temp = abs(self._dose_rate - item[1])
+            if abs((locale.atof(self._dose_rate) / 1000) - item[1]) < temp:
+                temp = abs((locale.atof(self._dose_rate) / 1000) - item[1])
                 point = item
 
-        self._distance = point[0] * (point[1] / self._dose_rate)**0.5
+        self._distance = str(round(point[0] * (point[1] / (locale.atof(self._dose_rate) / 1000))**0.5, 3))
 
-        self._data_changed = True
-        self.data_changed_changed.emit()
+        temp = 10000
+        point = []
+        for item in self._current_points:
+            if abs(locale.atof(self._distance) - item[0]) < temp:
+                temp = abs(locale.atof(self._distance) - item[0])
+                point = item
+
+        self._distance = str(round(point[0] * (point[1] / (locale.atof(self._dose_rate) / 1000)) ** 0.5, 3))
