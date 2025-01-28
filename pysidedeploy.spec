@@ -40,7 +40,7 @@ qml_files = qml\main.qml,qml\der.qml,qml\coefficients.qml,qml\dynamic.qml
 excluded_qml_plugins = QtQuick3D,QtSensors,QtTest,QtWebEngine,QtWayland,QtCharts,QtDataVisualization,QtGrpc,QtTextToSpeech,QtWebChannel,QtWebSockets,QtWebView,QtGraphs
 
 # qt modules used. comma separated
-modules = QuickControls2,Quick,Core,Qml,Gui
+modules = Quick,Gui,Core,Qml,QuickControls2
 
 # qt plugins used by the application
 plugins = accessiblebridge,platformthemes,imageformats,platforms,iconengines,xcbglintegrations,styles,generic,platforms/darwin,platforminputcontexts,egldeviceintegrations,scenegraph,qmltooling
