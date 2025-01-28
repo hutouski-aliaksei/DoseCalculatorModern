@@ -52,6 +52,7 @@ class Source9000(QObject):
         self._points = self._db.read(self._serial, '')
         self._current_points = []
         self._distance = '100'
+        self._offset = '0'
 
         self._material = 'Air'
         self._thickness = '0'
@@ -100,6 +101,10 @@ class Source9000(QObject):
     @property
     def distance(self):
         return self._distance
+
+    @property
+    def offset(self):
+        return self._offset
 
     @property
     def dose_rate(self):
@@ -164,6 +169,10 @@ class Source9000(QObject):
     @distance.setter
     def distance(self, value):
         self._distance = value
+
+    @offset.setter
+    def offset(self, value):
+        self._offset = value
 
     @Property(bool, notify=data_changed_changed)
     def data_changed(self):
@@ -235,11 +244,12 @@ class Source9000(QObject):
         temp = 10000
         point = []
         for item in self._current_points:
-            if abs(locale.atof(self._distance) - item[0]) < temp:
-                temp = abs(locale.atof(self._distance) - item[0])
+            if abs(locale.atof(self._distance) - locale.atof(self._offset) - item[0]) < temp:
+                temp = abs(locale.atof(self._distance) - locale.atof(self._offset) - item[0])
                 point = item
 
-        self._dose_rate = str(round((point[1] / (((locale.atof(self._distance))**2) / (point[0]**2))) * 1000, 3))
+        self._dose_rate = str(round((point[1] / (((locale.atof(self._distance) - locale.atof(self._offset))**2) /
+                                                 (point[0]**2))) * 1000, 3))
 
         self._data_changed = True
         self.data_changed_changed.emit()
@@ -294,4 +304,5 @@ class Source9000(QObject):
                 temp = abs(locale.atof(self._distance) - item[0])
                 point = item
 
-        self._distance = str(round(point[0] * (point[1] / (locale.atof(self._dose_rate) / 1000)) ** 0.5, 3))
+        self._distance = str(round(point[0] * (point[1] / (locale.atof(self._dose_rate) / 1000)) ** 0.5 +
+                             locale.atof(self._offset), 3))

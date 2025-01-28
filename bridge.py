@@ -213,7 +213,7 @@ class Bridge(QObject):
     def source9000_data_changed(self):
         temp = [self._source9000.number, self._source9000.name, self._source9000.halflife, self._source9000.prod_date,
                 self._source9000.cur_date, self._source9000.material, self._source9000.thickness,
-                self._source9000.distance, self._source9000.type, self._source9000.dose_rate]
+                self._source9000.distance, self._source9000.type, self._source9000.dose_rate, self._source9000.offset]
         self._view_array9000 = temp
 
         temp = []
@@ -273,6 +273,7 @@ class Bridge(QObject):
                 self._source9000.thickness = self._view_array9000[6]
                 self._source9000.type = self._view_array9000[8]
                 self._source9000.dose_rate = self._view_array9000[9]
+                self._source9000.offset = self._view_array9000[10]
                 self._source9000.calculate()
             case "der9000":
                 self._source9000.distance = self._view_array9000[7]

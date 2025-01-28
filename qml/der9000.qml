@@ -227,13 +227,93 @@ Page {
                         }
                     }
                 }
+
+                Label {
+                    id: distance_label
+                    width: button_width
+                    height: button_height
+                    anchors.left: parent.left
+                    anchors.top: cur_date_label.bottom
+                    anchors.leftMargin: margin
+                    anchors.topMargin: margin
+
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: 14
+                    Material.foreground: custom_color
+
+                    text: "Distance, cm"
+                }
+
+                TextField {
+                    id: distance_text
+                    width: button_width*2
+                    height: button_height
+                    anchors.top: distance_label.top
+                    anchors.right: parent.right
+                    anchors.rightMargin: margin
+                    text: bridge.view_array9000[7]
+                    color: custom_color
+                    validator: DoubleValidator {
+                        bottom: 0.1
+                    }
+                    enabled: bridge.db_exists
+                    onTextEdited: {
+                        if (acceptableInput) {
+                            bridge.view_array9000[7] = text
+                            if (text * 1 < bridge.view_array9000[6] * 1) {
+                                bridge.view_array9000[6] = text
+                                thickness_text.text = bridge.view_array9000[6]
+                            }
+                            bridge.on_action("der9000")
+                        }
+                    }
+                }
+
+                Label {
+                    id: offset_label
+                    width: button_width
+                    height: button_height
+                    anchors.left: parent.left
+                    anchors.top: distance_label.bottom
+                    anchors.leftMargin: margin
+                    anchors.topMargin: margin
+
+                    verticalAlignment: Text.AlignVCenter
+                    font.bold: true
+                    font.pixelSize: 14
+                    Material.foreground: custom_color
+
+                    text: "Offset, cm"
+                }
+
+                TextField {
+                    id: offset_text
+                    width: button_width*2
+                    height: button_height
+                    anchors.top: offset_label.top
+                    anchors.right: parent.right
+                    anchors.rightMargin: margin
+                    text: bridge.view_array9000[10]
+                    color: custom_color
+                    validator: DoubleValidator {
+                    }
+                    enabled: bridge.db_exists
+                    onTextEdited: {
+                        if (acceptableInput) {
+                            bridge.view_array9000[10] = text
+                            bridge.on_action("parameters9000")
+                        }
+                    }
+                }
+
             }
 
             Pane {
                 id: shield_pane
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                Layout.preferredHeight: 350
+                Layout.preferredHeight: 320
                 Material.elevation: 5
                 Material.background: Material.color(custom_color, Material.Shade50)
 
@@ -328,53 +408,11 @@ Page {
                 }
 
                 Label {
-                    id: distance_label
-                    width: button_width
-                    height: button_height
-                    anchors.left: parent.left
-                    anchors.top: thickness_label.bottom
-                    anchors.leftMargin: margin
-                    anchors.topMargin: margin
-
-                    verticalAlignment: Text.AlignVCenter
-                    font.bold: true
-                    font.pixelSize: 14
-                    Material.foreground: custom_color
-
-                    text: "Distance, cm"
-                }
-
-                TextField {
-                    id: distance_text
-                    width: button_width*2
-                    height: button_height
-                    anchors.top: distance_label.top
-                    anchors.right: parent.right
-                    anchors.rightMargin: margin
-                    text: bridge.view_array9000[7]
-                    color: custom_color
-                    validator: DoubleValidator {
-                        bottom: 0.1
-                    }
-                    enabled: bridge.db_exists
-                    onTextEdited: {
-                        if (acceptableInput) {
-                            bridge.view_array9000[7] = text
-                            if (text * 1 < bridge.view_array9000[6] * 1) {
-                                bridge.view_array9000[6] = text
-                                thickness_text.text = bridge.view_array9000[6]
-                            }
-                            bridge.on_action("der9000")
-                        }
-                    }
-                }
-
-                Label {
                     id: dose_type_label
                     width: button_width
                     height: button_height
                     anchors.left: parent.left
-                    anchors.top: distance_label.bottom
+                    anchors.top: thickness_label.bottom
                     anchors.leftMargin: margin
                     anchors.topMargin: margin
 
