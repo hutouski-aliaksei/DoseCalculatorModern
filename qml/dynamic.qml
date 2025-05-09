@@ -580,7 +580,7 @@ Page {
                             text: bridge.view_dynamic[10]
                             color: custom_color
                             validator: DoubleValidator {
-                                bottom: 0.000001
+                                bottom: 0.0000001
                             }
 
                             onTextEdited: {
