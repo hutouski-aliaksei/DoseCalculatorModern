@@ -231,7 +231,7 @@ Page {
                             text: bridge.view_dynamic[2]
                             color: custom_color
                             validator: DoubleValidator {
-                                bottom: 0.1
+                                bottom: 0
                             }
 
                             onTextEdited: {
@@ -356,7 +356,7 @@ Page {
                             text: bridge.view_dynamic[3]
                             color: custom_color
                             validator: DoubleValidator {
-                                bottom: 0.1
+                                bottom: 0
                             }
 
                             onTextEdited: {
