@@ -143,6 +143,9 @@ ApplicationWindow {
              main_layout.replace("der9000.qml")
             break
         case 3:
+             main_layout.replace("filtration.qml")
+            break
+        case 4:
              main_layout.replace("coefficients.qml")
             break
         default:
@@ -169,6 +172,10 @@ ApplicationWindow {
 
         TabButton {
             text: "PM9000"
+        }
+
+        TabButton {
+            text: "Filtration"
         }
 
 //        TabButton {

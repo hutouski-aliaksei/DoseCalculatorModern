@@ -79,3 +79,4 @@ dist/
 *.user
 android_build_manual/
 
+/.qtc_clangd/compile_commands.json

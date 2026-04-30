@@ -9,5 +9,6 @@
         <file>qml/main.qml</file>
         <file>qml/WaitElement.qml</file>
         <file>qml/der9000.qml</file>
+        <file>qml/filtration.qml</file>
     </qresource>
 </RCC>
